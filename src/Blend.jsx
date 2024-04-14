@@ -8,6 +8,11 @@ import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Background from '../public/container-spices.jpg';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+
 
 const ingredients = [
   { name: "Allspice", price: 15.00 },
@@ -52,9 +57,82 @@ const ingredients = [
   { name: "Vanilla", price: 30.00 }
 ];
 
-const App = () => {
+export const CartModal = ({ open, handleClose, cart, setCart, sliders, setSliders }) => {
+  const handleQuantityChange = (index, newQuantity) => {
+    const updatedSliders = sliders.map((slider) => {
+      const ingredient = ingredients.find((ing) => ing.name === slider.id);
+      const updatedPrice = (slider.value / 100) * ingredient.price * newQuantity;
+      return {
+        ...slider,
+        value: newQuantity,
+        price: updatedPrice
+      };
+    });
+    setSliders(updatedSliders);
+    const updatedCart = cart.map((item, i) =>
+      i === index ? { ...item, quantity: newQuantity } : item
+    );
+    setCart(updatedCart);
+  };
+
+  const handleRemoveItem = (index) => {
+    const updatedCart = cart.filter((item, i) => i !== index);
+    setCart(updatedCart);
+  };
+
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>My Blends</DialogTitle>
+      <DialogContent>
+        {cart.map((item, index) => (
+          <div key={index} style={{ marginBottom: 10 }}>
+            <div>{item.name}</div>
+            <div>Ingredients:</div>
+            <ul style={{ paddingLeft: 20 }}>
+              {item.ingredients.map((ingredient, i) => (
+                <li key={i}>
+                  {ingredient.name}: {ingredient.percentage}% - ${(ingredient.price * item.quantity).toFixed(2)}
+                </li>
+              ))}
+            </ul>
+            <div>
+              Total Price: ${(item.totalPrice * item.quantity).toFixed(2)}
+            </div>
+            <Input
+              type="number"
+              value={item.quantity}
+              onChange={(e) => handleQuantityChange(index, e.target.value)}
+              inputProps={{ min: 0 }}
+            />
+            <Button onClick={() => handleRemoveItem(index)}>Remove</Button>
+          </div>
+        ))}
+      </DialogContent>
+      <DialogActions>
+        <Button
+          variant="contained"
+          style={{
+            marginTop: 20,
+            backgroundColor: 'white',
+            color: 'black',
+            boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
+            transition: 'box-shadow 0.3s ease',
+            borderRadius: '4px',
+          }}
+        >
+          Check Out
+        </Button>
+        <Button onClick={handleClose}>Close</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+const BlendMix = () => {
   const [sliders, setSliders] = useState([]);
+  const [blendName, setBlendName] = useState("");
   const [cart, setCart] = useState([]);
+  const [openCart, setOpenCart] = useState(false);
 
   const handleSliderInput = (id, newValue) => {
     const updatedSliders = sliders.map((slider) =>
@@ -83,26 +161,44 @@ const App = () => {
     }
   };
 
-  const addToCart = (item) => {
-    const existingItemIndex = cart.findIndex((cartItem) => cartItem.id === item.id);
-    if (existingItemIndex !== -1) {
-      const updatedCart = [...cart];
-      updatedCart[existingItemIndex] = { ...updatedCart[existingItemIndex], quantity: updatedCart[existingItemIndex].quantity + 1 };
-      setCart(updatedCart);
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
-    }
+  const handleBlendNameChange = (e) => {
+    setBlendName(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const totalValue = sliders.reduce((acc, slider) => acc + slider.value, 0);
-    const totalPrice = sliders.reduce((acc, slider) => {
+    const blendIngredients = sliders.map((slider) => {
       const ingredient = ingredients.find((ing) => ing.name === slider.id);
-      return acc + (slider.value / 100) * ingredient.price;
-    }, 0);
-    console.log('Submitted:', sliders);
-    console.log('Total Price:', totalPrice.toFixed(2));
+      return {
+        name: slider.id,
+        percentage: slider.value,
+        price: (slider.value / 100) * ingredient.price
+      };
+    });
+
+    const totalPrice = blendIngredients.reduce((acc, ingredient) => acc + ingredient.price, 0);
+
+    const blend = {
+      name: blendName,
+      ingredients: blendIngredients,
+      totalPrice: totalPrice.toFixed(2),
+      quantity: 1
+    };
+
+
+    setCart([...cart, blend]); // Add blend to cart
+    setBlendName("");
+    setSliders([]);
+
+    console.log('Submitted:', blend);
+  };
+
+  const handleOpenCart = () => {
+    setOpenCart(true);
+  };
+
+  const handleCloseCart = () => {
+    setOpenCart(false);
   };
 
   return (
@@ -113,12 +209,24 @@ const App = () => {
       display: 'flex', 
       justifyContent: 'center', 
       alignItems: 'center',
-      boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)' /* Shadow effect */
+      boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)'
     }}>
       <div style={{ padding: 20, width: '40%', borderRadius: '100px', backgroundColor: 'rgba(0, 0, 0, 0.9)', textAlign: 'center', boxShadow: '0 40px 32px rgba(0, 0, 0, 0.8)', borderColor: 'white', borderWidth: '4px', borderStyle: 'solid' }}>
         <FormControl component="form" onSubmit={handleSubmit}>
           <FormLabel component="legend" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Dancing Script, cursive', fontSize: '6rem', color: 'white' }}>Blending Table</FormLabel>
           <FormGroup style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <input
+              type="text"
+              placeholder="Name Your Blend"
+              value={blendName}
+              onChange={handleBlendNameChange}
+              style={{    width: '100%',
+              marginBottom: 10,
+              padding: 5,
+              textAlign: 'center', 
+              marginLeft: 'auto', 
+              marginRight: 'auto' }}
+            />
             <Select
               value=""
               onChange={handleIngredientSelect}
@@ -187,10 +295,31 @@ const App = () => {
           >
             Submit
           </Button>
-        </FormControl>
+ 
+
+<p style={{ color: 'white' }}>Unique Seasonalities In Cart: {cart.length} </p>
+
+  <Button
+  variant="contained"
+  onClick={handleOpenCart}
+  style={{
+    marginTop: 20,
+    backgroundColor: 'white',
+    color: 'black',
+    boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
+    transition: 'box-shadow 0.3s ease',
+    borderRadius: '4px',
+  }}
+>
+  Review Blends
+</Button>
+<CartModal open={openCart} handleClose={handleCloseCart} cart={cart} setCart={setCart} sliders={sliders} setSliders={setSliders} />
+        </FormControl>  
+
       </div>
     </div>
+    
   );
 };
 
-export default App;
+export default BlendMix;

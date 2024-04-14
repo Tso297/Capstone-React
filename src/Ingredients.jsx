@@ -335,7 +335,7 @@ const Ingredients = () => {
             <h3>{selectedIngredient.name}</h3>
             <p>Uses: {selectedIngredient.application}</p>
             <img src={selectedIngredient.image} alt={selectedIngredient.name} />
-            <p>Pairings: {selectedIngredient.Flavor_Pairings}</p>
+            <p>Recommended Pairings: {selectedIngredient.Flavor_Pairings}</p>
           </div>
         </div>
       )}
