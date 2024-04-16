@@ -12,7 +12,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
+import { useCart } from './CartContext';
+import { useNavigate } from 'react-router-dom';
+import './ingredients.css'
 
 const ingredients = [
   { name: "Allspice", price: 15.00 },
@@ -56,108 +58,110 @@ const ingredients = [
   { name: "Turmeric", price: 9.00 },
   { name: "Vanilla", price: 30.00 }
 ];
-
-export const CartModal = ({ open, handleClose, cart, setCart, sliders, setSliders }) => {
-  const handleQuantityChange = (index, newQuantity) => {
-    const updatedSliders = sliders.map((slider) => {
-      const ingredient = ingredients.find((ing) => ing.name === slider.id);
-      const updatedPrice = (slider.value / 100) * ingredient.price * newQuantity;
-      return {
-        ...slider,
-        value: newQuantity,
-        price: updatedPrice
-      };
-    });
-    setSliders(updatedSliders);
-    const updatedCart = cart.map((item, i) =>
-      i === index ? { ...item, quantity: newQuantity } : item
-    );
-    setCart(updatedCart);
+export const CartModal = ({ open, handleClose }) => {
+  const { cart, setCart, removeFromCart } = useCart();
+  const [tempCart, setTempCart] = useState([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+      setTempCart(cart.map(item => ({ ...item }))); // Create a shallow copy of cart items
+  }, [cart, open]);
+  const handleQuantityChange = (index, event) => {
+      const newQuantity = parseInt(event.target.value, 10);
+      const updatedTempCart = tempCart.map((item, i) => {
+          if (i === index) {
+              return {
+                  ...item,
+                  quantity: newQuantity,
+                  totalPrice: item.totalPrice / item.quantity * newQuantity
+              };
+          }
+          return item;
+      });
+      setTempCart(updatedTempCart);
   };
-
+  const handleUpdateCart = () => {
+      setCart(tempCart);
+      handleClose();
+  };
   const handleRemoveItem = (index) => {
-    const updatedCart = cart.filter((item, i) => i !== index);
-    setCart(updatedCart);
+      const updatedTempCart = tempCart.filter((_, i) => i !== index);
+      setTempCart(updatedTempCart);
+      removeFromCart(index);
   };
-
+  const handleCheckout = () => {
+      navigate('/checkout');
+  };
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>My Blends</DialogTitle>
-      <DialogContent>
-        {cart.map((item, index) => (
-          <div key={index} style={{ marginBottom: 10 }}>
-            <div>{item.name}</div>
-            <div>Ingredients:</div>
-            <ul style={{ paddingLeft: 20 }}>
-              {item.ingredients.map((ingredient, i) => (
-                <li key={i}>
-                  {ingredient.name}: {ingredient.percentage}% - ${(ingredient.price * item.quantity).toFixed(2)}
-                </li>
+      <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>My Blends</DialogTitle>
+          <DialogContent>
+              {tempCart.map((item, index) => (
+                  <div key={index} style={{ marginBottom: 10 }}>
+                      <div>{item.name}</div>
+                      <div>Ingredients:</div>
+                      <ul style={{ paddingLeft: 20 }}>
+                          {item.ingredients.map((ingredient, i) => (
+                              <li key={i}>
+                                  {ingredient.name}: {ingredient.percentage}% - ${parseFloat(ingredient.price * item.quantity).toFixed(2)}
+                              </li>
+                          ))}
+                      </ul>
+                      <div>Total Price: ${parseFloat(item.totalPrice).toFixed(2)}</div>
+                      <Input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => handleQuantityChange(index, e)}
+                          inputProps={{ min: 1 }} // Enforce a minimum quantity of 1
+                      />
+                      <Button onClick={() => handleRemoveItem(index)} color="secondary">Remove</Button>
+                  </div>
               ))}
-            </ul>
-            <div>
-              Total Price: ${(item.totalPrice * item.quantity).toFixed(2)}
-            </div>
-            <Input
-              type="number"
-              value={item.quantity}
-              onChange={(e) => handleQuantityChange(index, e.target.value)}
-              inputProps={{ min: 0 }}
-            />
-            <Button onClick={() => handleRemoveItem(index)}>Remove</Button>
-          </div>
-        ))}
-      </DialogContent>
-      <DialogActions>
-        <Button
-          variant="contained"
-          style={{
-            marginTop: 20,
-            backgroundColor: 'white',
-            color: 'black',
-            boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
-            transition: 'box-shadow 0.3s ease',
-            borderRadius: '4px',
-          }}
-        >
-          Check Out
-        </Button>
-        <Button onClick={handleClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleUpdateCart} color="primary" variant="contained">Update</Button>
+              <Button onClick={handleCheckout} color="primary" variant="contained">Check Out</Button>
+              <Button onClick={handleClose} color="secondary">Close</Button>
+          </DialogActions>
+      </Dialog>
   );
 };
 
 const BlendMix = () => {
   const [sliders, setSliders] = useState([]);
   const [blendName, setBlendName] = useState("");
-  const [cart, setCart] = useState([]);
-  const [openCart, setOpenCart] = useState(false);
+  const navigate = useNavigate();
+  const { cart, addToCart } = useCart();
 
   const handleSliderInput = (id, newValue) => {
-    const updatedSliders = sliders.map((slider) =>
-      slider.id === id ? { ...slider, value: newValue } : slider
-    );
-    const totalValue = updatedSliders.reduce((acc, slider) => acc + slider.value, 0);
-    if (totalValue <= 100) {
-      setSliders(updatedSliders);
+    newValue = parseInt(newValue);
+    let total = sliders.reduce((acc, slider) => acc + (slider.id === id ? newValue : slider.value), 0);
+
+    if (total <= 100) {
+        const updatedSliders = sliders.map(slider =>
+            slider.id === id ? { ...slider, value: newValue } : slider
+        );
+        setSliders(updatedSliders);
     }
   };
 
-  const handleInputChange = (id, newValue) => {
-    const updatedSliders = sliders.map((slider) =>
-      slider.id === id ? { ...slider, value: newValue } : slider
-    );
-    const totalValue = updatedSliders.reduce((acc, slider) => acc + slider.value, 0);
-    if (totalValue <= 100) {
-      setSliders(updatedSliders);
+  const handleInputChange = (id, event) => {
+    let newValue = parseInt(event.target.value, 10);
+    if (isNaN(newValue)) newValue = 0;  // Defaults to 0 if input is NaN
+    if (newValue < 0) newValue = 0;  // Ensures percentage is not negative
+    if (newValue > 100) newValue = 100;  // Ensures percentage does not exceed 100
+
+    const total = sliders.reduce((acc, slider) => acc + (slider.id === id ? 0 : slider.value), 0) + newValue;
+    if (total <= 100) {
+        setSliders(sliders.map(slider =>
+            slider.id === id ? { ...slider, value: newValue } : slider
+        ));
     }
-  };
+};
 
   const handleIngredientSelect = (e) => {
     const selectedIngredient = e.target.value;
-    if (!sliders.find((slider) => slider.id === selectedIngredient)) {
-      setSliders([...sliders, { id: selectedIngredient, value: 0 }]);
+    if (!sliders.some(slider => slider.id === selectedIngredient)) {
+        setSliders([...sliders, { id: selectedIngredient, value: 0 }]);
     }
   };
 
@@ -167,159 +171,130 @@ const BlendMix = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const blendIngredients = sliders.map((slider) => {
-      const ingredient = ingredients.find((ing) => ing.name === slider.id);
-      return {
-        name: slider.id,
-        percentage: slider.value,
-        price: (slider.value / 100) * ingredient.price
-      };
+    const totalPercentage = sliders.reduce((total, slider) => total + slider.value, 0);
+    if (totalPercentage !== 100) {
+        alert('The total percentage must be 100. Please adjust the slider values.');
+        return;
+    }
+    const blendIngredients = sliders.map(slider => {
+        const ingredient = ingredients.find(ing => ing.name === slider.id);
+        return {
+            name: slider.id,
+            percentage: slider.value,
+            price: (slider.value / 100) * ingredient.price,
+        };
     });
-
     const totalPrice = blendIngredients.reduce((acc, ingredient) => acc + ingredient.price, 0);
-
     const blend = {
-      name: blendName,
-      ingredients: blendIngredients,
-      totalPrice: totalPrice.toFixed(2),
-      quantity: 1
+        name: blendName,
+        ingredients: blendIngredients,
+        totalPrice,
+        quantity: 1,
     };
-
-
-    setCart([...cart, blend]); // Add blend to cart
+    addToCart(blend);
     setBlendName("");
     setSliders([]);
-
-    console.log('Submitted:', blend);
-  };
-
-  const handleOpenCart = () => {
-    setOpenCart(true);
-  };
-
-  const handleCloseCart = () => {
-    setOpenCart(false);
   };
 
   return (
-    <div style={{ 
-      backgroundImage: `url(${Background})`, 
-      backgroundSize: 'cover', 
-      minHeight: '100vh', 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)'
-    }}>
-      <div style={{ padding: 20, width: '40%', borderRadius: '100px', backgroundColor: 'rgba(0, 0, 0, 0.9)', textAlign: 'center', boxShadow: '0 40px 32px rgba(0, 0, 0, 0.8)', borderColor: 'white', borderWidth: '4px', borderStyle: 'solid' }}>
-        <FormControl component="form" onSubmit={handleSubmit}>
-          <FormLabel component="legend" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Dancing Script, cursive', fontSize: '6rem', color: 'white' }}>Blending Table</FormLabel>
-          <FormGroup style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <input
-              type="text"
-              placeholder="Name Your Blend"
-              value={blendName}
-              onChange={handleBlendNameChange}
-              style={{    width: '100%',
-              marginBottom: 10,
-              padding: 5,
-              textAlign: 'center', 
-              marginLeft: 'auto', 
-              marginRight: 'auto' }}
+      <div style={{
+          backgroundImage: `url(${Background})`,
+          backgroundSize: 'cover',
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)'
+      }}>
+          <div style={{ padding: 20, width: '40%', borderRadius: '100px', backgroundColor: 'rgba(0, 0, 0, 0.9)', textAlign: 'center', boxShadow: '0 40px 32px rgba(0, 0, 0, 0.8)', borderColor: 'white', borderWidth: '4px', borderStyle: 'solid' }}>
+              <FormControl component="form" onSubmit={handleSubmit}>
+                  <FormLabel component="legend" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Dancing Script, cursive', fontSize: '6rem', color: 'white' }}>Blending Table</FormLabel>
+                  <FormGroup style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <input
+                          type="text"
+                          placeholder="Name Your Blend"
+                          value={blendName}
+                          onChange={handleBlendNameChange}
+                          style={{ width: '100%', marginBottom: 10, padding: 5, textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
+                      />
+                      <Select
+                          value=""
+                          onChange={handleIngredientSelect}
+                          displayEmpty
+                          style={{ width: '100%', marginBottom: 10, color: 'black', backgroundColor: 'white' }}
+                      >
+                          <MenuItem value="" disabled>Select Ingredient</MenuItem>
+                          {ingredients.map((ingredient) => (
+                              <MenuItem key={ingredient.name} value={ingredient.name}>{ingredient.name}</MenuItem>
+                          ))}
+                      </Select>
+                      {sliders.map((slider, index) => (
+    <div key={index} style={{ marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', color: 'white' }}>
+        <span style={{ flex: 1, textAlign: 'left', paddingRight: '10px' }}>{slider.id}</span>
+        <Slider
+            value={slider.value}
+            onChange={(e, newValue) => handleSliderInput(slider.id, newValue)}
+            aria-labelledby={`slider-${slider.id}`}
+            valueLabelDisplay="auto"
+            min={0}
+            max={100}
+            style={{ flex: 3, color: 'white' }}
+        />
+        <div className="input-percentage-container" style={{ flex: 1 }}>
+            <Input
+                className="input-percentage"
+                value={slider.value.toString()}
+                margin="dense"
+                onChange={(e) => handleInputChange(slider.id, e)}
+                inputProps={{
+                    step: 1,
+                    min: 0,
+                    max: 100,
+                    type: 'number',
+                    'aria-labelledby': `slider-input-${slider.id}`
+                }}
+                style={{ color: 'white', width: '70%' }}
             />
-            <Select
-              value=""
-              onChange={handleIngredientSelect}
-              displayEmpty
-              style={{ width: '100%', marginBottom: 10, color: 'black', backgroundColor: 'white' }}
-            >
-              <MenuItem value="" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Dancing Script, cursive', fontSize: '1.5rem', color: 'black' }} >Select Ingredient</MenuItem>
-              {ingredients.map((ingredient) => (
-                <MenuItem key={ingredient.name} value={ingredient.name} style={{ fontFamily: 'Dancing Script, cursive', color: 'white', fontSize: '1.5rem', backgroundColor: 'black' }}>{ingredient.name}</MenuItem>
-              ))}
-            </Select>
-            {sliders.map((slider) => {
-              const ingredient = ingredients.find((ing) => ing.name === slider.id);
-              const price = (slider.value / 100) * ingredient.price;
-              return (
-                <div key={slider.id} style={{ marginBottom: 10, display: 'flex', alignItems: 'center', color: 'white', justifyContent: 'center', width: '100%' }}>
-                  <span style={{ flex: '1', textAlign: 'left', paddingRight: '10px', color: 'white', fontFamily: 'Dancing Script, cursive' }}>{slider.id}</span>
-                  <Slider
-                    value={slider.value}
-                    onChange={(e, newValue) => handleSliderInput(slider.id, newValue)}
-                    aria-labelledby={`slider-with-input-${slider.id}`}
-                    valueLabelDisplay="auto"
-                    min={0}
-                    max={100}
-                    size="small"
-                    style={{ flex: '1', width: '100%', color: 'white' }}
-                  />
-                  <Input
-                    value={slider.value}
-                    onChange={(e) => handleInputChange(slider.id, e.target.value === '' ? '' : Number(e.target.value))}
-                    inputProps={{
-                      step: 1,
-                      min: 0,
-                      max: 100,
-                      type: 'number',
-                      'aria-labelledby': `slider-with-input-${slider.id}`,
-                    }}
-                    size="medium"
-                    style={{ flex: '1', width: '300px', marginLeft: '20px', color: 'white' }}
-                  />
-                  <span style={{ flex: '1', textAlign: 'left', paddingRight: '10px', color: 'white', fontFamily: 'Dancing Script, cursive' }}>{price.toFixed(2)}</span>
-                </div>
-              );
-            })}
-          </FormGroup>
-          <div style={{ marginTop: 10, color: 'white' }}>Blend Mixture:</div>
-          {sliders.map((slider) => (
-            <div key={slider.id} style={{ color: 'white' }}>{slider.id}: {slider.value}%</div>
-          ))}
-          <div style={{ color: 'white' }}>Total Price: ${(sliders.reduce((acc, slider) => acc + (slider.value / 100) * ingredients.find((ing) => ing.name === slider.id).price, 0)).toFixed(2)}</div>
-          <Button
-            type="submit"
-            variant="contained"
-            style={{
-              marginTop: 20,
-              backgroundColor: 'white',
-              color: 'black',
-              boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
-              transition: 'box-shadow 0.3s ease',
-              borderRadius: '4px',
-            }}
-            onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
-            onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
-            onMouseEnter={(e) => e.target.style.boxShadow = '0px 1px 2px rgba(0, 0, 0, 0.1), 0px 2px 4px rgba(0, 0, 0, 0.08)'}
-            onMouseLeave={(e) => e.target.style.boxShadow = '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)'}
-          >
-            Submit
-          </Button>
- 
-
-<p style={{ color: 'white' }}>Unique Seasonalities In Cart: {cart.length} </p>
-
-  <Button
-  variant="contained"
-  onClick={handleOpenCart}
-  style={{
-    marginTop: 20,
-    backgroundColor: 'white',
-    color: 'black',
-    boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
-    transition: 'box-shadow 0.3s ease',
-    borderRadius: '4px',
-  }}
->
-  Review Blends
-</Button>
-<CartModal open={openCart} handleClose={handleCloseCart} cart={cart} setCart={setCart} sliders={sliders} setSliders={setSliders} />
-        </FormControl>  
-
-      </div>
+            <span>%</span>
+        </div>
+        <span style={{ flex: 1, textAlign: 'right', paddingRight: '10px' }}>
+            ${((slider.value / 100) * ingredients.find(ing => ing.name === slider.id).price).toFixed(2)}
+        </span>
     </div>
-    
+))}
+                  </FormGroup>
+                  <Button
+                      type="submit"
+                      variant="contained"
+                      style={{
+                          marginTop: 20,
+                          backgroundColor: 'white',
+                          color: 'black',
+                          boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
+                          transition: 'box-shadow 0.3s ease',
+                          borderRadius: '4px',
+                      }}
+                  >
+                      Submit
+                  </Button>
+                  <p style={{ color: 'white' }}>Unique Seasonalities In Cart: {cart.length}</p>
+                  <Button
+                      variant="contained"
+                      onClick={() => navigate('/checkout')}
+                      style={{
+                          marginTop: 20,
+                          backgroundColor: 'white',
+                          color: 'black',
+                          boxShadow: '0px 2px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.08)',
+                          transition: 'box-shadow 0.3s ease',
+                          borderRadius: '4px',
+                      }}
+                  >
+                      View Cart
+                  </Button>
+              </FormControl>
+          </div>
+      </div>
   );
 };
-
 export default BlendMix;

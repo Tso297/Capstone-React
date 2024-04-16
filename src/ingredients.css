@@ -71,3 +71,30 @@
     z-index: 1;
   }
   
+  .input-percentage-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-percentage {
+    width: 50px;
+    text-align: center;
+    margin-right: 5px;
+}
+
+.input-percentage-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;  /* Set text color to white */
+}
+
+.input-percentage {
+  width: 50px; /* Adjust width as needed */
+  text-align: right; /* Align text to the right */
+  color: white; /* Set input text color to white */
+  background-color: transparent; /* Make input background transparent */
+  border: none; /* Remove borders if not needed */
+  outline: none; /* Remove focus outline */
+}

@@ -9,12 +9,13 @@ import AuthChecker from './auth/AuthChecker';
 import Checkout from './Checkout';
 import { signInWithPopup, signOut } from 'firebase/auth';
 import { auth, Providers } from './firebase';
+import { CartProvider } from './CartContext';
 
 function App() {
   const [cart, setCart] = useState([]);
 
   const addToCart = (item) => {
-  setCart([...cart, item]);
+    setCart(cart => [...cart, item]);
   };
 
   const signOutOnClick = () => {
@@ -27,9 +28,10 @@ function App() {
   };
 
   return (
+    <CartProvider>
     <BrowserRouter>
       <div className="App">
-        <Navbar CartModal={CartModal} cart={cart} signOutOnClick={signOutOnClick} signInOnClick={signInOnClick} />
+        <Navbar cart={cart} signOutOnClick={signOutOnClick} signInOnClick={signInOnClick} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -39,6 +41,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </CartProvider>
   );
 }
 
