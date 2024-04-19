@@ -13,7 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { useCart } from './CartContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './ingredients.css'
 
 const ingredients = [
@@ -88,8 +88,13 @@ export const CartModal = ({ open, handleClose }) => {
       setTempCart(updatedTempCart);
       removeFromCart(index);
   };
-  const handleCheckout = () => {
-      navigate('/checkout');
+  const handleCheckout = async() => {
+    const response = await fetch(`http://127.0.0.1:5000/api/checkout`,{method: 'POST', headers: {'Content-Type': 'application/json' , 'Access-Control_Allow_Origin':'*', 'x-access-token' :`Bearer ${user.token}`},
+    body: JSON.stringify(updatedTempCart)})
+    if (!response.ok) {
+    throw new Error("failed to checkout")
+    }
+    return await response.json()
   };
   return (
       <Dialog open={open} onClose={handleClose}>
@@ -119,18 +124,32 @@ export const CartModal = ({ open, handleClose }) => {
           </DialogContent>
           <DialogActions>
               <Button onClick={handleUpdateCart} color="primary" variant="contained">Update</Button>
-              <Button onClick={handleCheckout} color="primary" variant="contained">Check Out</Button>
+              <Button onClick={handleCheckout} color="primary" variant="contained">Review</Button>
               <Button onClick={handleClose} color="secondary">Close</Button>
           </DialogActions>
       </Dialog>
   );
 };
 
-const BlendMix = () => {
+export const BlendMix = (user) => {
   const [sliders, setSliders] = useState([]);
   const [blendName, setBlendName] = useState("");
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
+
+  const handleCheckout = async() => {
+    const response = await fetch(`http://127.0.0.1:5000/api/checkout`,{
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json' ,
+                'Access-Control_Allow_Origin':'*', 
+                'x-access-token' :`Bearer ${user.token}`},
+        body: JSON.stringify(cart)})
+        if (!response.ok) {
+        throw new Error("failed to checkout")
+    }
+    return await response.json()
+  };
+// THIS IS WHERE YOU THINK YOU NEED TO THROW THAT SHIT IN FOR STRIPE
 
   const handleSliderInput = (id, newValue) => {
     newValue = parseInt(newValue);
@@ -278,9 +297,10 @@ const BlendMix = () => {
                       Submit
                   </Button>
                   <p style={{ color: 'white' }}>Unique Seasonalities In Cart: {cart.length}</p>
+                  <Link to="/checkout" style={{ textDecoration: 'none' }}>
                   <Button
                       variant="contained"
-                      onClick={() => navigate('/checkout')}
+                      onClick={handleCheckout}
                       style={{
                           marginTop: 20,
                           backgroundColor: 'white',
@@ -292,6 +312,7 @@ const BlendMix = () => {
                   >
                       View Cart
                   </Button>
+                  </Link>
               </FormControl>
           </div>
       </div>

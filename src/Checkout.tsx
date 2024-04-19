@@ -1,8 +1,9 @@
 import React from 'react';
 import { useCart } from './CartContext';
 import './Checkout.css';
+import { BlendMix } from './Blend'
 
-const Checkout = () => {
+const Checkout = ({handleCheckout}) => {
   const { cart, updateCartItemQuantity, removeFromCart } = useCart();
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   const totalPrice = cart.reduce((total, item) => total + item.totalPrice * item.quantity, 0);
@@ -56,7 +57,11 @@ const Checkout = () => {
         </ul>
         <div className="checkout-summary">
           <p className='checkout-tags'>Total Items: {totalItems}</p>
-          <button className="checkout-button">Checkout</button>
+          <form  action="http://127.0.0.1:5000/api/create-checkout-session" method="POST">
+      <button onSubmit={handleCheckout} type="submit" className="checkout-button">
+        Checkout
+      </button>
+    </form>
           <p className='checkout-tags'>Total Price: ${totalPrice.toFixed(2)}</p>
         </div>
       </div>

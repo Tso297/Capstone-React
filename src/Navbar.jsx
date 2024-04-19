@@ -45,6 +45,7 @@ const Navbar = () => {
             </li>
           </ul>
           <Link to="/" className="navbar-brand" style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', marginLeft: '15rem' , fontFamily: 'Dancing Script, cursive' }}>Seasonality</Link>
+          
           {user && ( // Only display cart link if user is logged in
             <Link to="/checkout" className="nav-link" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginLeft: '35rem' }}>
               <FaShoppingCart style={{ marginRight: '5px' }} />
