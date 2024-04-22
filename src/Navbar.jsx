@@ -3,19 +3,22 @@ import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { auth, Providers } from './firebase';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
-import { useCart } from './CartContext'; // Ensure this is imported correctly
+import { useCart, useCartDetails } from './CartContext';
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
-  const { cart } = useCart(); // Access cart from context
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-  const totalPrice = cart.reduce((total, item) => total + item.totalPrice * item.quantity, 0).toFixed(2);
+  const { addToCart, cart, fetchCart } = useCart();
+  const { totalQuantity, totalPrice } = useCartDetails();
+  //const totalPrice = Array.isArray(cart) ? cart.reduce((total, item) => total + (item.totalPrice * item.quantity), 0) : 0;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      if (user) {
+        fetchCart(); // Call fetchCart when the user logs in
+      }
     });
-    return () => unsubscribe(); // Proper cleanup on component unmount
+    return () => unsubscribe();
   }, []);
 
   const signOutOnClick = () => {
@@ -24,6 +27,24 @@ const Navbar = () => {
 
   const signInOnClick = async () => {
     const response = await signInWithPopup(auth, Providers.google);
+    if (response.user) {
+      fetchCart();  // Optionally fetch the cart right after signing in
+    }
+  };
+
+  const handleAddTestItem = () => {
+    const testItem = { id: 'test1', name: 'Test Product', quantity: 1, totalPrice: 10.00 };
+    addToCart(testItem);
+};
+
+  const buttonStyle = {
+    color: 'black',
+    marginLeft: 'auto',
+    padding: '8px 16px',
+    fontSize: '1rem',
+    backgroundColor: 'white',
+    border: 'none',
+    cursor: 'pointer'
   };
 
   return (
@@ -41,24 +62,26 @@ const Navbar = () => {
               <Link className="nav-link" to="/ingredients" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>Ingredients</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/blend" style={{  marginRight: '1.75rem',fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>Make a Seasonality!</Link>
+              <Link className="nav-link" to="/blend" style={{ marginRight: '1.75rem', fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>Make a Seasonality!</Link>
             </li>
           </ul>
-          <Link to="/" className="navbar-brand" style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', marginLeft: '15rem' , fontFamily: 'Dancing Script, cursive' }}>Seasonality</Link>
+          <button onClick={handleAddTestItem}>Add Test Item</button>
+          <Link to="/" className="navbar-brand" style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', marginLeft: '16rem', fontFamily: 'Dancing Script, cursive' }}>Seasonality</Link>
           
-          {user && ( // Only display cart link if user is logged in
-            <Link to="/checkout" className="nav-link" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginLeft: '35rem' }}>
-              <FaShoppingCart style={{ marginRight: '5px' }} />
-              <span>{totalItems} - ${totalPrice}</span>
-            </Link>
-          )}
-          {!user ? (
-            <button onClick={signInOnClick} style={{ color: 'black', marginLeft: '46rem' }}>
-              Sign In
-            </button>
+          {user ? (
+            <div className="nav-item" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', display: 'flex', alignItems: 'center', marginLeft: '9rem' }}>
+              <span>Welcome, {user.displayName || 'User'}!</span>
+              <Link to="/checkout" className="nav-link" style={{ marginLeft: '10px' }}>
+                <FaShoppingCart style={{ marginRight: '15px', marginLeft: '8rem' }} />
+                <span>{totalQuantity} - ${totalPrice}</span>
+              </Link>
+              <button onClick={signOutOnClick} style={buttonStyle}>
+                Sign Out
+              </button>
+            </div>
           ) : (
-            <button onClick={signOutOnClick} style={{ color: 'black' }}>
-              Sign Out
+            <button onClick={signInOnClick} style={buttonStyle}>
+              Sign In
             </button>
           )}
         </div>

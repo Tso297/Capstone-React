@@ -8,11 +8,7 @@ import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Background from '../public/container-spices.jpg';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import { useCart } from './CartContext';
+import { useCart, useParsedCart } from './CartContext';
 import { useNavigate, Link } from 'react-router-dom';
 import './ingredients.css'
 
@@ -58,97 +54,64 @@ const ingredients = [
   { name: "Turmeric", price: 9.00 },
   { name: "Vanilla", price: 30.00 }
 ];
-export const CartModal = ({ open, handleClose }) => {
-  const { cart, setCart, removeFromCart } = useCart();
-  const [tempCart, setTempCart] = useState([]);
-  const navigate = useNavigate();
-  useEffect(() => {
-      setTempCart(cart.map(item => ({ ...item }))); // Create a shallow copy of cart items
-  }, [cart, open]);
-  const handleQuantityChange = (index, event) => {
-      const newQuantity = parseInt(event.target.value, 10);
-      const updatedTempCart = tempCart.map((item, i) => {
-          if (i === index) {
-              return {
-                  ...item,
-                  quantity: newQuantity,
-                  totalPrice: item.totalPrice / item.quantity * newQuantity
-              };
-          }
-          return item;
-      });
-      setTempCart(updatedTempCart);
-  };
-  const handleUpdateCart = () => {
-      setCart(tempCart);
-      handleClose();
-  };
-  const handleRemoveItem = (index) => {
-      const updatedTempCart = tempCart.filter((_, i) => i !== index);
-      setTempCart(updatedTempCart);
-      removeFromCart(index);
-  };
-  const handleCheckout = async() => {
-    const response = await fetch(`http://127.0.0.1:5000/api/checkout`,{method: 'POST', headers: {'Content-Type': 'application/json' , 'Access-Control_Allow_Origin':'*', 'x-access-token' :`Bearer ${user.token}`},
-    body: JSON.stringify(updatedTempCart)})
-    if (!response.ok) {
-    throw new Error("failed to checkout")
-    }
-    return await response.json()
-  };
-  return (
-      <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>My Blends</DialogTitle>
-          <DialogContent>
-              {tempCart.map((item, index) => (
-                  <div key={index} style={{ marginBottom: 10 }}>
-                      <div>{item.name}</div>
-                      <div>Ingredients:</div>
-                      <ul style={{ paddingLeft: 20 }}>
-                          {item.ingredients.map((ingredient, i) => (
-                              <li key={i}>
-                                  {ingredient.name}: {ingredient.percentage}% - ${parseFloat(ingredient.price * item.quantity).toFixed(2)}
-                              </li>
-                          ))}
-                      </ul>
-                      <div>Total Price: ${parseFloat(item.totalPrice).toFixed(2)}</div>
-                      <Input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) => handleQuantityChange(index, e)}
-                          inputProps={{ min: 1 }} // Enforce a minimum quantity of 1
-                      />
-                      <Button onClick={() => handleRemoveItem(index)} color="secondary">Remove</Button>
-                  </div>
-              ))}
-          </DialogContent>
-          <DialogActions>
-              <Button onClick={handleUpdateCart} color="primary" variant="contained">Update</Button>
-              <Button onClick={handleCheckout} color="primary" variant="contained">Review</Button>
-              <Button onClick={handleClose} color="secondary">Close</Button>
-          </DialogActions>
-      </Dialog>
-  );
-};
 
-export const BlendMix = (user) => {
+const BlendMix = (user) => {
   const [sliders, setSliders] = useState([]);
   const [blendName, setBlendName] = useState("");
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
 
-  const handleCheckout = async() => {
-    const response = await fetch(`http://127.0.0.1:5000/api/checkout`,{
-        method: 'POST', 
-        headers: {'Content-Type': 'application/json' ,
-                'Access-Control_Allow_Origin':'*', 
-                'x-access-token' :`Bearer ${user.token}`},
-        body: JSON.stringify(cart)})
+  console.log('Current cart:', cart);
+  console.log('Number of items in cart:', cart.length);
+
+    const cartItems = useParsedCart();
+    console.log('Number of items in cart:', cartItems.length);
+
+  const handleCheckout = async () => {
+    try {
+        // Perform the initial checkout to your own backend
+        const response = await fetch(`http://127.0.0.1:5000/api/checkout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Note: 'Access-Control-Allow-Origin' is a response header and should not be set by the client
+                'x-access-token': `Bearer ${user.token}`,
+            },
+            body: JSON.stringify(cart)
+        });
+
         if (!response.ok) {
-        throw new Error("failed to checkout")
+            throw new Error("Failed to checkout: " + await response.text());
+        }
+
+        // If initial checkout is successful, proceed with Stripe checkout
+        const checkoutData = await response.json();
+        console.log('Initial checkout successful:', checkoutData);
+
+        // Assuming the server's response includes a URL or session ID for Stripe
+        // Now initiate Stripe checkout
+        const stripeResponse = await fetch(`http://127.0.0.1:5000/api/create-checkout-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({ cart })  // Assuming you need to send the cart or other data
+        });
+
+        if (!stripeResponse.ok) {
+            throw new Error("Failed to create Stripe session: " + await stripeResponse.text());
+        }
+
+        // Get the Stripe session URL from your server's response and redirect
+        const stripeSession = await stripeResponse.json();
+        window.location.href = stripeSession.url;  // Redirect to Stripe's checkout page
+
+    } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Error during checkout. Please try again.');
     }
-    return await response.json()
-  };
+};
 // THIS IS WHERE YOU THINK YOU NEED TO THROW THAT SHIT IN FOR STRIPE
 
   const handleSliderInput = (id, newValue) => {
@@ -210,9 +173,13 @@ export const BlendMix = (user) => {
         totalPrice,
         quantity: 1,
     };
+    console.log('check 1')
     addToCart(blend);
+    console.log('check 2')
     setBlendName("");
+    console.log('check 3')
     setSliders([]);
+    console.log('check 4')
   };
 
   return (
@@ -296,11 +263,10 @@ export const BlendMix = (user) => {
                   >
                       Submit
                   </Button>
-                  <p style={{ color: 'white' }}>Unique Seasonalities In Cart: {cart.length}</p>
+                  <p style={{ color: 'white' }}>Unique Seasonalities In Cart: {cartItems.length}</p>
                   <Link to="/checkout" style={{ textDecoration: 'none' }}>
                   <Button
                       variant="contained"
-                      onClick={handleCheckout}
                       style={{
                           marginTop: 20,
                           backgroundColor: 'white',

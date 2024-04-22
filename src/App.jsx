@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Home from './Home';
 import About from './About';
 import Ingredients from './Ingredients';
-import BlendMix, { CartModal } from './Blend';
+import BlendMix from './Blend';
 import AuthChecker from './auth/AuthChecker';
 import Checkout from './Checkout';
 import { signInWithPopup, signOut } from 'firebase/auth';

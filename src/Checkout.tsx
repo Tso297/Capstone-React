@@ -1,72 +1,85 @@
-import React from 'react';
-import { useCart } from './CartContext';
+import React, { useEffect } from 'react';
+import { useCart, useCartDetails } from './CartContext';
 import './Checkout.css';
-import { BlendMix } from './Blend'
+import BlendMix from './Blend';
 
-const Checkout = ({handleCheckout}) => {
-  const { cart, updateCartItemQuantity, removeFromCart } = useCart();
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-  const totalPrice = cart.reduce((total, item) => total + item.totalPrice * item.quantity, 0);
+const Checkout = () => {
+    const { user, handleCheckout, removeFromCart, updateCartItemQuantity } = useCart();
+    const { cartItems, totalQuantity, totalPrice } = useCartDetails();  // Using the custom hook for detailed cart info
+    console.log("Cart Items in Checkout Component:", cartItems);
 
-  const handleQuantityChange = (itemId, newQuantity) => {
-    updateCartItemQuantity(itemId, parseInt(newQuantity, 10));
-  };
+    useEffect(() => {
+      console.log("Cart items updated, re-render should happen", cartItems);
+  }, [cartItems]); 
 
-  const handleRemoveItem = (itemId) => {
-    removeFromCart(itemId);
-  };
+    const handleQuantityChange = (itemName, newQuantity) => {
+        updateCartItemQuantity(itemName, parseInt(newQuantity, 10));
+    };
 
-  return (
-    <div className="checkout-container">
-      <div className="checkout-content">
-        <h1 className='title'>View Your Seasonalities</h1>
-        <ul>
-          {cart.map((item) => (
-            <li key={item.id} className="checkout-item">
-              <div className="item-details">
-                <span className='ingredient-name'>{item.name}</span>
-                <div>
-                  <span className='ingredient-quantity'>Quantity:</span>
-                  <input
-                    type="number"
-                    min="1"
-                    value={item.quantity}
-                    onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                  className='ingredient-quantity-box'/>
+    const handleRemoveItem = (itemName) => {
+        removeFromCart(itemName);
+    };
+
+    const onCheckoutClick = async () => {
+        if (!user) {
+            alert("Please log in to proceed with the checkout.");
+            return;
+        }
+        await handleCheckout();
+    };
+
+    return (
+        <div className="checkout-container">
+            <div className="checkout-content">
+                <h1 className='title'>View Your Seasonalities</h1>
+                <ul>
+                    {cartItems.map((item) => (
+                        <li key={item.name} className="checkout-item">
+                            <div className="item-details">
+                                <span className='ingredient-name'>{item.name}</span>
+                                <div>
+                                    <span className='ingredient-quantity'>Quantity:</span>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={item.quantity}
+                                        onChange={(e) => handleQuantityChange(item.name, e.target.value)}
+
+                                        className='ingredient-quantity-box'/>
+                                        
+                                </div>
+
+                                <div>
+                                    <span className='price'>Total Price:</span>
+                                    <span className='number_price'>${(item.totalPrice * item.quantity).toFixed(2)}</span>
+                                </div>
+                                {item.ingredients && item.ingredients.length > 0 && (
+                                    <div>
+                                        <h6 className='ingredients-label'>Ingredients:</h6>
+                                        <ul className="ingredients-list">
+                                            {item.ingredients.map((ingredient, idx) => (
+                                                <li key={idx} className="ingredient">
+                                                    {ingredient.name} - {ingredient.percentage}%
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                            <button className="remove-button" onClick={() => handleRemoveItem(item.name)}>Remove</button>
+                        </li>
+                    ))}
+                </ul>
+                <div className="checkout-summary">
+                    <p className='checkout-tags'>Total Items: {totalQuantity}</p>
+                    <button onClick={onCheckoutClick} className="checkout-button">
+                        Checkout
+                    </button>
+                    <p className='checkout-tags'>Total Price: ${totalPrice}</p>
                 </div>
-                <div>
-                  <span className='price'>Total Price:</span>
-                  <span className='number_price'>${(item.totalPrice * item.quantity).toFixed(2)}</span>
-                </div>
-                {item.ingredients && item.ingredients.length > 0 && (
-  <div>
-    <h6 className='ingredients-label'>Ingredients:</h6>
-    <ul className="ingredients-list">
-      {item.ingredients.map((ingredient, idx) => (
-        <li key={idx} className="ingredient">
-          {ingredient.name} - {ingredient.percentage}%
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
-              </div>
-              <button className="remove-button" onClick={() => handleRemoveItem(item.id)}>Remove</button>
-            </li>
-          ))}
-        </ul>
-        <div className="checkout-summary">
-          <p className='checkout-tags'>Total Items: {totalItems}</p>
-          <form  action="http://127.0.0.1:5000/api/create-checkout-session" method="POST">
-      <button onSubmit={handleCheckout} type="submit" className="checkout-button">
-        Checkout
-      </button>
-    </form>
-          <p className='checkout-tags'>Total Price: ${totalPrice.toFixed(2)}</p>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Checkout;
