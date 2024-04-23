@@ -16,8 +16,8 @@ const Checkout = () => {
         updateCartItemQuantity(itemName, parseInt(newQuantity, 10));
     };
 
-    const handleRemoveItem = (itemName) => {
-        removeFromCart(itemName);
+    const handleRemoveItem = (id) => {
+        removeFromCart(id);
     };
 
     const onCheckoutClick = async () => {

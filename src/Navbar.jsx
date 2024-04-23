@@ -32,10 +32,7 @@ const Navbar = () => {
     }
   };
 
-  const handleAddTestItem = () => {
-    const testItem = { id: 'test1', name: 'Test Product', quantity: 1, totalPrice: 10.00 };
-    addToCart(testItem);
-};
+
 
   const buttonStyle = {
     color: 'black',
@@ -65,7 +62,6 @@ const Navbar = () => {
               <Link className="nav-link" to="/blend" style={{ marginRight: '1.75rem', fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>Make a Seasonality!</Link>
             </li>
           </ul>
-          <button onClick={handleAddTestItem}>Add Test Item</button>
           <Link to="/" className="navbar-brand" style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', marginLeft: '16rem', fontFamily: 'Dancing Script, cursive' }}>Seasonality</Link>
           
           {user ? (

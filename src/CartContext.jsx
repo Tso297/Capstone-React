@@ -113,16 +113,17 @@ const fetchCart = async () => {
       }
     };
 
-    const handleQuantityChange = (itemName, newQuantity) => {
+  const handleQuantityChange = (itemName, newQuantity) => {
       console.log(`Attempting to update item with ID: ${itemName} to new quantity: ${newQuantity}`);
       updateCartItemQuantity(itemName, parseInt(newQuantity, 10));
   };
   
   const updateCartItemQuantity = async (itemName, newQuantity) => {
-    const updatedCart = cartItems.map(item =>
+    console.log(`Starting to update item with name: ${itemName} to new quantity: ${newQuantity}`);
+    const updatedItems = cartItems.map(item =>
         item.name === itemName ? { ...item, quantity: parseInt(newQuantity, 10) } : item
     );
-
+  
     try {
         const response = await fetch('http://127.0.0.1:5000/api/update-cart-item', {
             method: 'POST',
@@ -131,73 +132,87 @@ const fetchCart = async () => {
                 'Authorization': `Bearer ${user.token}`, 
                 'User': `${user.uid}`
             },
-            body: JSON.stringify(updatedCart)
+            body: JSON.stringify(updatedItems)
         });
-
+  
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const updatedCartFromServer = await response.json();
-        // Create a deep copy of the cart to ensure React detects the changes
-        const newCart = updatedCartFromServer.map(item => ({ ...item }));
-        setCart(newCart);
+        const { updatedItems: newUpdatedItems, totalPrice } = await response.json();
+        console.log(`Updated cart received from server: `, newUpdatedItems);
+  
+        // Here, ensure you are creating a completely new object/array structure
+        setCart({
+            ...cart, 
+            custom_blend: JSON.stringify(newUpdatedItems),
+            totalPrice: totalPrice
+        }); // This should trigger a re-render
+  
+        console.log("Cart state updated.");
     } catch (error) {
         console.error("Failed to update cart item quantity:", error);
     }
-};
+  };
 
-    const removeFromCart = async (itemName) => {
-        try {
-            const response = await fetch(`http://127.0.0.1:5000/api/cart/remove/${itemName}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${user?.token}`
-                }
-            });
-            if (response.ok) {
-                const updatedCart = await response.json();
-                setCart(updatedCart);
-            }
-        } catch (error) {
-            console.error("Failed to remove item from cart:", error);
+  const removeFromCart = async (itemName) => {
+    console.log(`Starting to remove item with name: ${itemName}`);
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/cart/item/${itemName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user?.token}`,
+                'User': user?.uid
+            },
+            credentials: 'include'  // This is necessary if your server is using sessions
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-    };
+        const { updatedCart, totalPrice } = await response.json();
+        console.log(`Updated cart received from server: `, updatedCart);
+
+        // Here, ensure you are creating a completely new object/array structure
+        setCart({
+            ...cart,
+            custom_blend: JSON.stringify(updatedCart),
+            totalPrice: totalPrice
+        }); // This should trigger a re-render
+
+        console.log("Cart state updated after removal.");
+    } catch (error) {
+        console.error("Failed to remove item from cart:", error);
+    }
+};
 
     // Keeping your original handleCheckout function exactly as provided
     const handleCheckout = async () => {
+        
+        if (!user || !user.token || !user.uid) {
+            console.error("User data is incomplete:", user);
+            alert("Your session has expired, please log in again.");
+            return;
+        }
+    
         try {
-            // Perform the initial checkout to your own backend
-            const response = await fetch(`http://127.0.0.1:5000/api/checkout`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': `Bearer ${user.token}`,
-                },
-                body: JSON.stringify(cart)
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to checkout: " + await response.text());
-            }
-
-            const checkoutData = await response.json();
-            console.log('Initial checkout successful:', checkoutData);
-
-            // Now initiate Stripe checkout
             const stripeResponse = await fetch(`http://127.0.0.1:5000/api/create-checkout-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-access-token': `Bearer ${user.token}`
-                },
-                body: JSON.stringify({ cart })  // Assuming you need to send the cart or other data
+                    'Authorization': `Bearer ${user.token}`,
+                    'User': user.uid
+                }
             });
-
+    
+            console.log("Stripe response status:", stripeResponse.status);
+            const responseText = await stripeResponse.text();  // Get text response to ensure you can read error messages
+            console.log("Stripe response body:", responseText);
+    
             if (!stripeResponse.ok) {
-                throw new Error("Failed to create Stripe session: " + await stripeResponse.text());
+                throw new Error("Failed to create Stripe session: " + responseText);
             }
-
-            const stripeSession = await stripeResponse.json();
+    
+            const stripeSession = JSON.parse(responseText);
             window.location.href = stripeSession.url;  // Redirect to Stripe's checkout page
         } catch (error) {
             console.error('Checkout error:', error);
