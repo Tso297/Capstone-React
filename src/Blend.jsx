@@ -70,7 +70,7 @@ const BlendMix = (user) => {
   const handleCheckout = async () => {
     try {
         // Perform the initial checkout to your own backend
-        const response = await fetch(`http://127.0.0.1:5000/api/checkout`, {
+        const response = await fetch(`https://flask-capstone-1.onrender.com/api/checkout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const BlendMix = (user) => {
 
         // Assuming the server's response includes a URL or session ID for Stripe
         // Now initiate Stripe checkout
-        const stripeResponse = await fetch(`http://127.0.0.1:5000/api/create-checkout-session`, {
+        const stripeResponse = await fetch(`https://flask-capstone-1.onrender.com/api/create-checkout-session`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ export default class Create extends Component {
       password,
     };
 
-    const url = 'http://127.0.0.1:5000/api/users';
+    const url = 'https://flask-capstone-1.onrender.com/api/users';
     const options = {
       method: 'POST',
       headers: {

@@ -63,7 +63,7 @@ const fetchCart = async () => {
   console.log("Fetching cart for user:", user.uid); // Logging the user UID for debugging
 
   try {
-      const response = await fetch('http://127.0.0.1:5000/api/cart', {
+      const response = await fetch('https://flask-capstone-1.onrender.com/api/cart', {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const fetchCart = async () => {
       setCart(processedCart); // Update the cart state locally
     
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/update-cart', {
+        const response = await fetch('https://flask-capstone-1.onrender.com/api/update-cart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ const fetchCart = async () => {
     );
   
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/update-cart-item', {
+        const response = await fetch('https://flask-capstone-1.onrender.com/api/update-cart-item', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ const fetchCart = async () => {
   const removeFromCart = async (itemName) => {
     console.log(`Starting to remove item with name: ${itemName}`);
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/cart/item/${itemName}`, {
+        const response = await fetch(`https://flask-capstone-1.onrender.com/api/cart/item/${itemName}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ const fetchCart = async () => {
         }
     
         try {
-            const stripeResponse = await fetch(`http://127.0.0.1:5000/api/create-checkout-session`, {
+            const stripeResponse = await fetch(`https://flask-capstone-1.onrender.com/api/create-checkout-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
