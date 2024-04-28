@@ -62,7 +62,7 @@ const Navbar = () => {
                                 <FaShoppingCart className="nav-cart-icon" />
                                 <span>{totalQuantity} - ${totalPrice}</span>
                             </Link>
-                            <button onClick={signOutOnClick} className="nav-button">
+                            <button onClick={signOutOnClick} className="nav-button2">
                                 Sign Out
                             </button>
                         </div>

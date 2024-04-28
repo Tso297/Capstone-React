@@ -224,9 +224,9 @@ const BlendMix = (user) => {
             valueLabelDisplay="auto"
             min={0}
             max={100}
-            style={{ flex: 3, color: 'white' }}
+            style={{ flex: 3, color: 'white', marginRight: '1rem' }}
         />
-        <div className="input-percentage-container" style={{ flex: 1 }}>
+        <div className="input-percentage-container" style={{ flex: 1, }}>
             <Input
                 className="input-percentage"
                 value={slider.value.toString()}

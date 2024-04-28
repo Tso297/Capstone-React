@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Orders.css'
+import Background from '../public/checkout.png'
 
 const API_URL = 'https://flask-capstone-1.onrender.com/api'; // Your Flask API URL
 
@@ -81,7 +82,15 @@ function Orders() {
   };
 
   return (
-    <div className="orders-container">
+    <div className="orders-container" style={{
+        backgroundImage: `url(${Background})`,
+        backgroundSize: 'cover',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+
+        boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)'
+    }}>
       <div className="main-section"> {/* Main section for unfulfilled orders */}
         <div className="orders-list">
           <h2 className="orders-h2">Unfulfilled Orders</h2>

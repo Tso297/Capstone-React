@@ -12,7 +12,7 @@
 .main-section {
     width: 48%; /* Each main section takes nearly half the horizontal space */
     margin: 0 1%; /* Small margin for breathing space between the two main sections */
-    background-color: rgba(0, 0, 0, 0.8); /* Slight transparency to see the background */
+    background-color: rgba(255, 255, 255, 0.2); /* Slight transparency to see the background */
     padding: 20px;
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
