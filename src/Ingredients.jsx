@@ -69,7 +69,7 @@ const Ingredients = () => {
     },
     {
       name: "Anise",
-      image: "https://res.cloudinary.com/dhgpf6985/image/upload/anise_clnktm.jpg",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330949/anise_clnktm.jpg",
       application: "used to make cakes, confectionaries, biscuits, breads, and other baked goods as well as flavor liquors, sauces, sausages, soups, and stews",
       Flavor_Pairings: "caraway, fennel, dill weed, coriander, tarragon, turmeric"
     },
