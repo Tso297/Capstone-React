@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import Home from './Home';
 import About from './About';
+import Orders from './Orders';
 import Ingredients from './Ingredients';
 import BlendMix from './Blend';
 import AuthChecker from './auth/AuthChecker';
@@ -36,6 +37,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/ingredients" element={<Ingredients />} />
+          <Route path="/orders" element={<Orders />} />
           <Route path="/blend" element={<BlendMix cart={cart} setCart={setCart} addToCart={addToCart} />} />
           <Route path="/checkout" element={<AuthChecker><Checkout /></AuthChecker>} />
         </Routes>

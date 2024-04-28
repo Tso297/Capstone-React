@@ -63,7 +63,7 @@ const Ingredients = () => {
   const ingredientsData = [
     {
       name: "Allspice",
-      image: "../public/allspice.jpg",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714329734/allspice_bmjd8o.jpg",
       application: "used to spice up pies, cakes, muffins, and other baked goods, can be used in marinades, pickling and mulling spices, soups, stews, and curry dishes",
       Flavor_Pairings: "cinnamon, nutmeg, coriander, peppercorn, clove, rosemary"
     },
