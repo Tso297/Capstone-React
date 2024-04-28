@@ -81,223 +81,223 @@ const Ingredients = () => {
     },
     {
       name: "Basil",
-      image: "https://asset.cloudinary.com/dhgpf6985/65094926d56fbc9f4452cc5c5c029c0d",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330949/basil_j7ooga.jpg",
       application: "used to create dry rubs for red meats, poultry, and seafood dishes as well as in sauces, soups, stews, and pasta dishes",
       Flavor_Pairings: "garlic, rosemary, thyme, oregano"
     },
     {
       name: "Bay Leaves",
-      image: "https://asset.cloudinary.com/dhgpf6985/89bece117a99adb739b69e499922187b",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330949/basil_j7ooga.jpg",
       application: "adds depth of flavor to soups, stews, and braises, ingredient in pickling brines, and is one of three main components in the Bouquet Garni seasoning blend",
       Flavor_Pairings: "sage, marjoram, thyme, oregano"
     },
     {
       name: "Caraway Seed",
-      image: "https://asset.cloudinary.com/dhgpf6985/ea4a02d2bbc57b9716a01502a9d2926c",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330949/carawayseed_nrrprz.jpg",
       application: "used to flavor sauerkraut, coleslaw, soda bread, potato salad, cheeses, and breads",
       Flavor_Pairings: "anise, fennel, coriander"
     },
     {
       name: "Cardamom",
-      image: "https://asset.cloudinary.com/dhgpf6985/8928692f3bda7e8108057f7b88ac8f0c",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330955/cardamom_fshhgh.jpg",
       application: "used in baked goods, custards, puddings, chai tea, mulled wine, curries, pilaf, and other rice-based dishes as well as for seasoning meat, poultry, and seafood",
       Flavor_Pairings: "cinnamon, clove, allspice, ginger, turmeric, nutmeg"
     },
     {
       name: "Cayenne",
-      image: "https://asset.cloudinary.com/dhgpf6985/2785748f49c6ec6368131927eed9a0d0",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330955/cayenne_unn6ar.jpg",
       application: "adds a kick to sauces, condiments, stews, chilis, marinades, dry rubs, seafood dishes, egg dishes, meats, and vegetables",
       Flavor_Pairings: "bay leaf, chili powder, curry, garlic, onion"
     },
     {
       name: "Celery Seed",
-      image: "https://asset.cloudinary.com/dhgpf6985/21e7ab4764826162c844f195db945931",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330955/celeryseed_cuwtpk.jpg",
       application: "used for pickling brines or in coleslaw, potato salad, macaroni salad, deli meats, soups, stews, curries, and chutneys",
       Flavor_Pairings: "cilantro, mustard, parsley, rosemary, thyme"
     },
     {
       name: "Chives",
-      image: "https://asset.cloudinary.com/dhgpf6985/d2f1b4a1d6f41d6bdf05168155cd12e4",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330961/chives_rstl7q.jpg",
       application: "used in egg-, cheese-, and cream-based dishes, soups, stews, chowders, stir-fries, sauces, and dips or as a garnish for both mashed and baked potatoes, salads, and finished meals",
       Flavor_Pairings: "parsley, tarragon, chervil, garlic"
     },
     {
       name: "Cilantro",
-      image: "https://asset.cloudinary.com/dhgpf6985/324c559b38df808cc9bb0efbe3a0ca8e",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330961/cilantro_buagve.jpg",
       application: "used in bean dips or purees, bread, chutneys, rice, salsa, soups, and tagines",
       Flavor_Pairings: "lime, onion, chile pepper, cumin, garlic"
     },
     {
       name: "Cinnamon",
-      image: "https://asset.cloudinary.com/dhgpf6985/4b02300404ada7139a66e73abf2ff36c",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330965/cinnamon_hchqen.jpg",
       application: "add to hot chocolate, cider, mulled wine, tea, cakes, cookies, muffins, and other desserts, curry dishes, roasts, stews, and chili, or use to garnish breakfast foods, puddings, and desserts",
       Flavor_Pairings: "curry, allspice, nutmeg, ginger, coriander, turmeric"
     },
     {
       name: "Cloves",
-      image: "https://asset.cloudinary.com/dhgpf6985/7569f070796ed7c83ce79159bf2519ce",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330965/cloves_rsal1j.jpg",
       application: "used in baked goods, hot beverages, sauces, soups, and stews as well as for studding ham and pork roasts for enhanced flavor and presentation",
       Flavor_Pairings: "cinnamon, allspice, cardamom, ginger, nutmeg, curry"
     },
     {
       name: "Coriander",
-      image: "https://asset.cloudinary.com/dhgpf6985/1b1d643b041634310d0d9efb12874695",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330965/coriander_f3iv5q.jpg",
       application: "used to season meats and beans, create meat rubs, taco seasonings, curry dishes, chili, and stews",
       Flavor_Pairings: "curry, cumin, paprika, chili powder"
     },
     {
       name: "Cumin",
-      image: "https://asset.cloudinary.com/dhgpf6985/f32c09e3a02977a214772b3fba5e8787",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330971/cumin_w22mq7.jpg",
       application: "adds depth or a kick to dressings, stews, sauces, marinades, dry rubs, beans, and smoked meats",
       Flavor_Pairings: "bay leaf, chili powder, curry, garlic, onion"
     },
     {
       name: "Dill Weed",
-      image: "https://asset.cloudinary.com/dhgpf6985/108d5bc1bf95f559a2c690d416722fc4",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330971/dillweed_rvmdij.jpg",
       application: "used in fish dishes, yogurt- or sour cream-based dips and sauces, mayonnaise-based salads, and deviled eggs",
       Flavor_Pairings: "mustard, horseradish, basil, garlic"
     },
     {
       name: "Fennel Seed",
-      image: "https://asset.cloudinary.com/dhgpf6985/11d8b6cb09534863c48942f3380f6cf7",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330971/fennelseed_km5npn.jpg",
       application: "used to flavor liquors and spirits, create fennel tea, season meats such as pork, spicy Italian sausages, meatballs, meatloaf, and salami, and in breads",
       Flavor_Pairings: "mint, cilantro, dill weed, parsley, thyme, anise"
     },
     {
       name: "Flaxseed",
-      image: "https://asset.cloudinary.com/dhgpf6985/0f163ff5be26f89c926e0a4945972030",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330971/flaxseed_larh9n.jpg",
       application: "used in cereals, breads, and smoothies",
       Flavor_Pairings: "garlic powder, paprika, sesame, fennel, cinnamon"
     },
     {
       name: "Garlic",
-      image: "https://asset.cloudinary.com/dhgpf6985/1b5d774d1f823bbba06434d1c938c140",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330978/garlic_q7lhck.jpg",
       application: "adds zest and depth to dressings, sauces, marinades, meat rubs, condiments, casseroles, and stir-fries",
       Flavor_Pairings: "basil, rosemary, thyme, oregano, chili powder, coriander"
     },
     {
       name: "Ginger",
-      image: "https://asset.cloudinary.com/dhgpf6985/02705dcb61dbc0ca4ea31205b3c72ea7",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330978/ginger_dxvhwz.jpg",
       application: "used in baked goods, curries, stir fries, marinades, dressings, and meat rubs",
       Flavor_Pairings: "allspice, coriander, cinnamon, cloves, nutmeg"
     },
     {
       name: "Juniper Berries",
-      image: "https://asset.cloudinary.com/dhgpf6985/12f3bb619ad2451de70c485daecc63a7",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330983/juniper_od6mi1.jpg",
       application: "used to season game meat, flavor liquor, and create marinades, sauces, and brines",
       Flavor_Pairings: "bay leaf, rosemary, marjoram, garlic, caraway, thyme"
     },
     {
       name: "Marjoram",
-      image: "https://asset.cloudinary.com/dhgpf6985/8a0be55b231a3214bf827a2a78923a1e",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330984/marjoram_jip5i3.jpg",
       application: "used in salad dressings, marinades, soups, sauces, and sausages, also a main component in the Bouquet Garni and the Fines Herbes seasoning blends",
       Flavor_Pairings: "basil, thyme, rosemary, parsley, fennel seed"
     },
     {
       name: "Mint",
-      image: "https://asset.cloudinary.com/dhgpf6985/7ad4f695f5d44ce667910db1b83f9c12",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330984/mint_vjncp6.jpg",
       application: "used to make herbal teas, mint sauces, jellies, and chutneys, season meats, salads, roasted vegetables, and stews, and is a key ingredient in yogurt sauces",
       Flavor_Pairings: "basil, thyme, tarragon, dill weed, fennel seed, and coriander"
     },
     {
       name: "Mustard",
-      image: "https://asset.cloudinary.com/dhgpf6985/a59d1d901f5cae76f154a3982d69e7b5",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330984/mustard_osy9wz.jpg",
       application: "used to create pickling spices and season meats, vegetables, beans, sauces, marinades, condiments, and dressings",
       Flavor_Pairings: "bay leaves, chili powder, dill weed, fennel, coriander"
     },
     {
       name: "Nutmeg",
-      image: "https://asset.cloudinary.com/dhgpf6985/d9e16ad0c72da050aeb73928bee52965",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330984/nutmeg_vatkk0.jpg",
       application: "used in baked goods, custards, puddings, soups, stews, and cheese sauces or as a garnish for beverages, breakfast foods, and desserts",
       Flavor_Pairings: " cinnamon, allspice, cardamom, ginger, coriander, mace, cloves"
     },
     {
       name: "Onion",
-      image: "https://asset.cloudinary.com/dhgpf6985/b9f9fb68576aaceef4851f49fa366e37",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330984/onion_vzwk6b.jpg",
       application: "adds depth to dressings, sauces, marinades, meat rubs, condiments, casseroles, and stir-fries",
       Flavor_Pairings: "garlic, crushed red pepper, chili powder, coriander, parsley"
     },
     {
       name: "Oregano",
-      image: "https://asset.cloudinary.com/dhgpf6985/5f1b34c83ea85eaf6a4cd97ce2d6441b",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330985/oregano_vtnsgh.jpg",
       application: "used in tomato-based sauces, marinades, dressings, and egg- or cheese-based dishes, common garnish on sandwiches, pasta, and pizza",
       Flavor_Pairings: "chili powder, basil, marjoram, fennel seed, parsley, thyme"
     },
     {
       name: "Paprika",
-      image: "https://asset.cloudinary.com/dhgpf6985/239fec5ba2b7b419992ea9908e938489",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330992/paprika_bn52gx.jpg",
       application: "adds depth or a kick to dressings, sauces, marinades, meat rubs, seafood, and vegetables, also commonly used as a garnish for soups",
       Flavor_Pairings: "garlic, rosemary, thyme, parsley, turmeric"
     },
     {
       name: "Parsley",
-      image: "https://asset.cloudinary.com/dhgpf6985/7b19e7e4a100eacf302c99b9f63c15ff",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330992/parsley_j5ev3o.jpg",
       application: "used to make herbed butter, cheese, and aioli, for flavoring and/or garnishing sauces, soups, and salads, and is a main component in the traditional Bouquet Garni blend",
       Flavor_Pairings: "bay leaf, rosemary, marjoram, garlic, dill weed, thyme"
     },
     {
       name: "Pepper",
-      image: "https://asset.cloudinary.com/dhgpf6985/38757db3b55cf8a2744274d1ffb0f205",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330992/pepper_pygdrq.jpg",
       application: "used for garnishing, seasoning meats and vegetables, and as an ingredient in sauces, dressings, and marinades",
       Flavor_Pairings: "virtually any spice"
     },
     {
       name: "Poppy Seed",
-      image: "https://asset.cloudinary.com/dhgpf6985/90c1533bdbbd9267d6cc66668f82bb47",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330992/poppyseed_z1jhle.jpg",
       application: " used in bagels, breads, muffins, buns, pretzels, noodle dishes, seafood dishes, or as a garnish on salads",
       Flavor_Pairings: "sesame seeds, mustard, curry"
     },
     {
       name: "Rosemary",
-      image: "https://asset.cloudinary.com/dhgpf6985/4240c0398ca4dc1f3d5f7dd596c27204",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330996/rosemary_pyojcm.jpg",
       application: "used to season meats, sauces, and soups, baked into crackers and bread, and an essential ingredient in the traditional Bouquet Garni and Herbes de Provence seasoning blends",
       Flavor_Pairings: "oregano, basil, sage, parsley, thyme, mint"
     },
     {
       name: "Sage",
-      image: "https://asset.cloudinary.com/dhgpf6985/5f07174837baed3d355fb7f2e3b197b2",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330997/sage_tfdfwl.jpg",
       application: " used to season poultry, pork, duck, goose, lamb, stuffing, soups, and roasted potatoes, frequently used to preserve and flavor sausages",
       Flavor_Pairings: "celery seed, smoked paprika, thyme, rosemary, marjoram"
     },
     {
       name: "Salt",
-      image: "https://asset.cloudinary.com/dhgpf6985/624fdf8e8d7f37ca044a308aa44531de",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331000/salt_h0x8ym.jpg",
       application: "used for garnishing, seasoning meats and vegetables, and as an ingredient in sauces, dressings, and marinades",
       Flavor_Pairings: "virtually any spice"
     },
     {
       name: "Sesame Seed",
-      image: "https://asset.cloudinary.com/dhgpf6985/a9f41b69077b9d6536aca8e0306137fe",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331000/sesameseed_hx0hnf.jpg",
       application: "used in breads, crackers, and cakes, stir fries and noodle dishes, hummus, sushi, and other seafood dishes",
       Flavor_Pairings: "cardamom, nutmeg, thyme, cloves"
     },
     {
       name: "Star Anise",
-      image: "https://asset.cloudinary.com/dhgpf6985/bf342bf2297425231ae3612d876ce5e8",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331000/staranise_uvyugi.jpg",
       application: "used to flavor sauces, soups, stocks, teas, liquor, and mulled wine as well as cakes, cookies, pies",
       Flavor_Pairings: "cinnamon, fennel, coriander, tarragon, cloves"
     },
     {
       name: "Tarragon",
-      image: "https://asset.cloudinary.com/dhgpf6985/cc92e16c809b260f0bf214565d6e2a0c",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331000/tarragon_fenjuc.jpg",
       application: "used to season poultry, pork, lamb, game, seafood, sauces, vinegar, dressings, oils, and herbed mayonnaise recipes",
       Flavor_Pairings: "chives, rosemary, parsley, thyme, mustard seed, anise"
     },
     {
       name: "Thyme",
-      image: "https://asset.cloudinary.com/dhgpf6985/2b47356522a04823eb6aed4aff5074b0",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331006/thyme_tdllml.jpg",
       application: "used to season meat, fish, eggs, and vegetable dishes, create compound butter and soups, and as an ingredient in soups, stews, and dressings",
       Flavor_Pairings: "basil, rosemary, marjoram, garlic, onion, parsley"
     },
     {
       name: "Turmeric",
-      image: "https://asset.cloudinary.com/dhgpf6985/817c424e1ddc4ec64c1778892b61ae01",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331006/turmeric_kum1rt.jpg",
       application: "used in curry powders, mustards, and relishes, to season vegetables, lamb, beef, seafood, and make wellness shots and juices",
       Flavor_Pairings: "anise, fennel, pepper, coriander, nutmeg, cloves"
     },
     {
       name: "Vanilla",
-      image: "https://asset.cloudinary.com/dhgpf6985/f8ba3c6f23935048cf01d6497a55ad2d",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714331007/vanilla_obnhb5.jpg",
       application: "used for its own distinctive flavor it is also a flavor enhancer, which can be added to other flavors such as fruit flavors, salad dressing or meat sauces.",
       Flavor_Pairings: "allspice, cinnamon, ginger, mint, nutmeg"
     },
