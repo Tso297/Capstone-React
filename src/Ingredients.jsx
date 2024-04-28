@@ -75,7 +75,7 @@ const Ingredients = () => {
     },
     {
       name: "Annatto",
-      image: "https://asset.cloudinary.com/dhgpf6985/28fc6e8dd62b6d9638e0930505225d78",
+      image: "https://res.cloudinary.com/dhgpf6985/image/upload/v1714330949/bayleaves_pva7ev.jpg",
       application: "often used as a natural dye to impart an appealing yellow-orange color to cheeses, oils, rice, and sauces and adds flavor to soups, stews, and chowders",
       Flavor_Pairings: "paprika, chili powder, cloves, allspice"
     },
@@ -334,6 +334,7 @@ const Ingredients = () => {
             <button className="close-button" onClick={handleCloseModal}>Close</button>
             <h3>{selectedIngredient.name}</h3>
             <p>Uses: {selectedIngredient.application}</p>
+            <script>console.log({selectedIngredient.image})</script>
             <img src={selectedIngredient.image} alt={selectedIngredient.name} />
             <p>Recommended Pairings: {selectedIngredient.Flavor_Pairings}</p>
           </div>
