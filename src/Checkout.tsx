@@ -59,7 +59,7 @@ const Checkout = () => {
                                         <ul className="ingredients-list">
                                             {item.ingredients.map((ingredient, idx) => (
                                                 <li key={idx} className="ingredient">
-                                                    {ingredient.name} - {ingredient.percentage}%
+                                                    <div>{ingredient.name} </div><div> {ingredient.percentage}%</div>
                                                 </li>
                                             ))}
                                         </ul>
