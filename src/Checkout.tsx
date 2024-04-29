@@ -5,7 +5,7 @@ import BlendMix from './Blend';
 
 const Checkout = () => {
     const { user, handleCheckout, removeFromCart, updateCartItemQuantity } = useCart();
-    const { cartItems, totalQuantity, totalPrice } = useCartDetails();  // Using the custom hook for detailed cart info
+    const { cartItems, totalQuantity, totalPrice } = useCartDetails();
     console.log("Cart Items in Checkout Component:", cartItems);
 
     useEffect(() => {

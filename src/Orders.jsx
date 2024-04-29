@@ -91,7 +91,7 @@ function Orders() {
 
         boxShadow: 'inset 0 0 300px rgba(0,0,0,0.9)'
     }}>
-      <div className="main-section"> {/* Main section for unfulfilled orders */}
+      <div className="main-section">
         <div className="orders-list">
           <h2 className="orders-h2">Unfulfilled Orders</h2>
           {orders.map(order => (
@@ -114,7 +114,7 @@ function Orders() {
           ))}
         </div>
       </div>
-      <div className="main-section"> {/* Main section for fulfilled orders */}
+      <div className="main-section"> 
         <div className="orders-list">
           <h2 className="orders-h2">Fulfilled Orders</h2>
           {fulfilledOrders.map(order => (

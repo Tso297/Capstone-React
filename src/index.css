@@ -70,15 +70,13 @@ button:focus-visible {
   }
 }
 
-/* Specific styles for the signup form */
-
 .container-fluid {
-  padding: 20px; /* Add padding to the container */
+  padding: 20px;
 }
 
 .card {
-  width: 1000%; /* Make the card fill the container width */
-  max-width: 600px; /* Set a max-width to avoid stretching the card too much */
-  margin: 0 auto; /* Center the card horizontally */
-  background-color: #fff; /* Set card background color to white */
+  width: 1000%;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
 }

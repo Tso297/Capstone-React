@@ -10,7 +10,7 @@ export const CartProvider = ({ children }) => {
 
 
   const cartItems = cart.custom_blend ? JSON.parse(cart.custom_blend) : [];
-  console.log("Parsed cart items structure:", cartItems);  // This line will log the structure
+  console.log("Parsed cart items structure:", cartItems);
 
   
   console.log('Parsed cart items:', cartItems);
@@ -19,21 +19,20 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
-            // Assuming firebaseUser.accessToken is available; replace or ensure this property is correct
+
             const userDetails = {
                 uid: firebaseUser.uid,
                 email: firebaseUser.email,
-                token: firebaseUser.accessToken, // Ensure this is correct
+                token: firebaseUser.accessToken,
                 displayName: firebaseUser.displayName
             };
 
-            // Check if all required user details are present
             if (userDetails.uid && userDetails.token) {
                 console.log("Setting user details:", userDetails);
                 setUser(userDetails);
             } else {
                 console.log("Incomplete user data received from Firebase:", userDetails);
-                setUser(null); // Ensure no incomplete user data is set
+                setUser(null);
             }
         } else {
             console.log("No user logged in or incomplete data.");
@@ -42,7 +41,7 @@ export const CartProvider = ({ children }) => {
         }
     });
 
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
 }, []);
 
 useEffect(() => {
@@ -52,22 +51,22 @@ useEffect(() => {
     } else {
         console.log("User not ready or missing necessary properties:", user);
     }
-}, [user]); // Dependency on user state
+}, [user]);
 
 const fetchCart = async () => {
-  if (!user || !user.uid) { // Check if user exists and has a uid
+  if (!user || !user.uid) { 
       console.error("Attempted to fetch cart without a valid user or necessary user properties.", user);
-      return; // Avoid making a fetch call if user data is incomplete
+      return; 
   }
 
-  console.log("Fetching cart for user:", user.uid); // Logging the user UID for debugging
+  console.log("Fetching cart for user:", user.uid); 
 
   try {
       const response = await fetch('https://flask-capstone-1.onrender.com/api/cart', {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${user.token}`, // Assuming the token is available and needed
+              'Authorization': `Bearer ${user.token}`, 
               'User': user.uid
           }
       });
@@ -77,8 +76,8 @@ const fetchCart = async () => {
       }
 
       const data = await response.json();
-      setCart(data); // Update your cart state
-      console.log("Cart data received:", data); // Log received cart data
+      setCart(data); 
+      console.log("Cart data received:", data); 
   } catch (error) {
       console.error("Failed to fetch cart:", error);
   }
